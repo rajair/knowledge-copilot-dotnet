@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <UserSecretsId>dotnet-KnowledgeCopilot.Worker-2586ca34-2002-4f5a-9d52-f7b857e97d49</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KnowledgeCopilot.ServiceDefaults\KnowledgeCopilot.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\KnowledgeCopilot.Application\KnowledgeCopilot.Application.csproj" />
+  </ItemGroup>
+
+</Project>
