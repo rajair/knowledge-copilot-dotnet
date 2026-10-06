@@ -237,3 +237,74 @@ including fixes for gaps found during the plan review.
 
 Each step appends its decisions below as `D-<step>-<nn>` with the same
 structure (decision, alternatives, trade-off).
+
+### D-0-01: xUnit v3 test projects written by hand on `xunit.v3.mtp-v2`
+
+- **Decision:** Test `.csproj` files reference `xunit.v3.mtp-v2` (Microsoft.Testing.Platform v2)
+  directly; `global.json` selects the MTP runner for `dotnet test`.
+- **Alternatives:** `dotnet new xunit` / `aspire-xunit` (both still generate xUnit 2.9.3);
+  installing the `xunit.v3.templates` pack (one more global install for two small files).
+- **Trade-off:** No template to regenerate from; the files are short and reviewed.
+
+### D-0-02: AppHost uses NuGet-restored DCP and dashboard (`AspireUseCliBundle=false`)
+
+- **Decision:** The Aspire 13.6 template sets `AspireUseCliBundle=true`, which resolves DCP and
+  the dashboard from an installed Aspire CLI. We set it to `false` and suppress `ASPIRE010`, so
+  `dotnet run`, `Aspire.Hosting.Testing` and CI need no global CLI and use pinned package versions.
+- **Alternatives:** Keep the bundle and install the CLI in CI (or rely on its DNX fallback).
+- **Trade-off:** We miss CLI-bundle-only features until we need one. `aspire run` still works.
+
+### D-0-03: `AddNextJsApp` used despite being experimental
+
+- **Decision:** `AddNextJsApp` (plus `WithPnpm`) exists in `Aspire.Hosting.JavaScript` 13.6.0 but is
+  marked `ASPIREJAVASCRIPT001` (evaluation). We suppress it only around that call in `AppHost.cs`.
+- **Alternatives:** `AddJavaScriptApp(..., "dev")`, which is stable but has no Next.js publish support.
+- **Trade-off:** The API may change in a minor Aspire update; Dependabot PRs will surface it.
+
+### D-0-04: Next.js `output: "standalone"` and a `public/` folder from day one
+
+- **Decision:** `AddNextJsApp` requires both for publish mode. They change nothing in dev and
+  avoid a confusing failure in Step 10.
+- **Alternatives:** Add them in Step 10; call `DisableBuildValidation()`.
+
+### D-0-05: Shared host defaults live in ServiceDefaults
+
+- **Decision:** The JSON console formatter outside Development and `AddKnowledgeCopilotOptions()`
+  live in ServiceDefaults, so Api and Worker behave the same.
+- **Alternatives:** Configure each host separately (drifts).
+
+### D-0-06: `Profile` is a nullable enum with `[Required]` and `[EnumDataType]`
+
+- **Decision:** A non-nullable enum defaults to `Free`, so `[Required]` could never fail. Nullable
+  makes a missing value fail `ValidateOnStart`; `[EnumDataType]` rejects undefined numeric values
+  such as `42`. No `appsettings*.json` sets the profile.
+- **Trade-off:** Consumers read `Profile!.Value` (or a helper) after validation.
+
+### D-0-07: LF line endings everywhere; IDE rules enforced on build
+
+- **Decision:** `.gitattributes` (`* text=auto eol=lf`) and `.editorconfig` (`end_of_line = lf`)
+  agree, so `dotnet format --verify-no-changes` gives the same result on Windows (autocrlf) and
+  Linux CI. `GenerateDocumentationFile=true` lets IDE0005 (unused usings) run on build; CS1591 is
+  suppressed so XML docs stay optional.
+- **Alternatives:** CRLF on Windows only (format check fails in one of the two places).
+
+### D-0-08: Makefile has per-part targets; CI calls those
+
+- **Decision:** `setup|build|lint|test` aggregate `-dotnet`, `-web` and `-evals` targets; each CI
+  job calls its part. `evals` has no build target (nothing to compile). `dev` runs
+  `aspire run || dotnet run`. Recipes avoid shell built-ins such as `echo`, because GNU make on
+  Windows may run commands without a shell.
+- **Trade-off:** If `aspire run` exits with an error, the fallback starts too; acceptable for a dev target.
+
+### D-0-09: Empty libraries already follow the dependency rule
+
+- **Decision:** `Domain -> Contracts`, `Application -> Domain`, and both hosts reference
+  `Application`. Each library has one `*AssemblyMarker` static class for later architecture tests.
+
+### D-0-10: Minimal Next.js scaffold
+
+- **Decision:** `create-next-app --empty --no-tailwind --no-react-compiler --no-agents-md`.
+  Styling and component libraries are chosen in Step 7, where the UI is built.
+  `next.config.ts` sets `agentRules: false`, because `next dev` otherwise writes `web/AGENTS.md`
+  and `web/CLAUDE.md` whenever it detects an AI agent; agent rules for this repo live in
+  `.github/copilot-instructions.md`.
