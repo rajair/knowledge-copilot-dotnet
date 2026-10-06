@@ -42,15 +42,18 @@ If a request conflicts with these, stop and ask. Don't pick one quietly.
 ## C# conventions
 
 - `net10.0`, nullable enabled, `TreatWarningsAsErrors`, latest analyzers.
-  Versions live in `Directory.Packages.props` (central package management);
+  NuGet versions live in `Directory.Packages.props` (central package
+  management); the Aspire SDK version lives in `global.json` → `msbuild-sdks`.
   `.csproj` files never carry versions.
+- `global.json` sets `allowPrerelease: false`; a preview SDK must never be selected.
 - Minimal APIs with `TypedResults`; errors as RFC 9457 `ProblemDetails`.
 - Options classes bound with `ValidateDataAnnotations().ValidateOnStart()`.
 - Inject `TimeProvider`; never call `DateTime.UtcNow` / `DateTimeOffset.UtcNow`.
 - Every async method takes a `CancellationToken` and passes it on.
 - Use `ILogger` with source-generated `[LoggerMessage]` methods. Never log
   document text, prompts, tokens or secrets.
-- No MediatR, AutoMapper or MassTransit. Plain classes and DI.
+- No MediatR, AutoMapper, MassTransit, Serilog or Swashbuckle. Plain classes
+  and DI; logging via `ILogger` + OpenTelemetry; OpenAPI via `Microsoft.AspNetCore.OpenApi`.
 - `sealed` by default; records for data; file-scoped namespaces.
 
 ## Security rules (non-negotiable)
@@ -72,6 +75,8 @@ If a request conflicts with these, stop and ask. Don't pick one quietly.
 - Bug fix: add a test that fails before the fix.
 - Security behaviour gets negative tests (cross-tenant, forged approval, etc.).
 - `web/`: Vitest + Testing Library. `evals/`: pytest.
+- Lockfiles (`pnpm-lock.yaml`, `uv.lock`) are committed; CI and `make setup`
+  install with `--frozen-lockfile` / `--locked`.
 
 ## Working style
 
