@@ -426,3 +426,11 @@ FodyWeavers.xsd
 
 # Official VS Code C# Dev Kit Extension exclusion
 #*.lscache
+
+# Knowledge Copilot toolchains
+.next/
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.tsbuildinfo
+next-env.d.ts
