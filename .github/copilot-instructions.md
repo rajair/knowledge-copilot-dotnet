@@ -25,6 +25,10 @@ If a request conflicts with these, stop and ask. Don't pick one quietly.
 - `web/` (Next.js, pnpm), `evals/` (Python 3.12, uv), `contracts/schema/`
   (generated), `tools/`, `infra/`, `deploy/`, `loadtests/`, `docs/`.
 - `Makefile` is the entry point: `make setup build lint test dev contracts eval`.
+  Each of `setup|build|lint|test` has per-part targets (`-dotnet`, `-web`, `-evals`)
+  that CI jobs call. Recipes must not use shell built-ins (`echo`, `rm`).
+- Line endings are LF (`.gitattributes` + `.editorconfig`), so `dotnet format`
+  gives the same result on Windows and Linux.
 
 ## Architecture rules
 

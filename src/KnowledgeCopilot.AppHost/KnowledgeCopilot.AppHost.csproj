@@ -1,0 +1,21 @@
+<Project Sdk="Aspire.AppHost.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>62e49f03-aa20-4f73-8d84-85a8521139c6</UserSecretsId>
+    <!-- DCP and the dashboard come from pinned NuGet packages, so dotnet run, the test host and CI
+         work without a global Aspire CLI (D-0-02). -->
+    <AspireUseCliBundle>false</AspireUseCliBundle>
+    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.JavaScript" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KnowledgeCopilot.Api\KnowledgeCopilot.Api.csproj" />
+    <ProjectReference Include="..\KnowledgeCopilot.Worker\KnowledgeCopilot.Worker.csproj" />
+  </ItemGroup>
+
+</Project>

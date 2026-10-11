@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\KnowledgeCopilot.Contracts\KnowledgeCopilot.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

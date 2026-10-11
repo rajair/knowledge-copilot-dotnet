@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/KnowledgeCopilot.Api/KnowledgeCopilot.Api.csproj" />
+    <Project Path="src/KnowledgeCopilot.AppHost/KnowledgeCopilot.AppHost.csproj" />
+    <Project Path="src/KnowledgeCopilot.Application/KnowledgeCopilot.Application.csproj" />
+    <Project Path="src/KnowledgeCopilot.Contracts/KnowledgeCopilot.Contracts.csproj" />
+    <Project Path="src/KnowledgeCopilot.Domain/KnowledgeCopilot.Domain.csproj" />
+    <Project Path="src/KnowledgeCopilot.ServiceDefaults/KnowledgeCopilot.ServiceDefaults.csproj" />
+    <Project Path="src/KnowledgeCopilot.Worker/KnowledgeCopilot.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/KnowledgeCopilot.Api.Tests/KnowledgeCopilot.Api.Tests.csproj" />
+    <Project Path="tests/KnowledgeCopilot.AppHost.Tests/KnowledgeCopilot.AppHost.Tests.csproj" />
+  </Folder>
+</Solution>
