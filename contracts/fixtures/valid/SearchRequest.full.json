@@ -1,0 +1,5 @@
+{
+  "query": "travel per diem",
+  "topK": 5,
+  "mode": "sparse"
+}

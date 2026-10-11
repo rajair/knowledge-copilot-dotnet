@@ -1,0 +1,11 @@
+{
+  "title": "FY2024 10-K",
+  "contentType": "application/pdf",
+  "acl": {
+    "users": [
+      "bob"
+    ],
+    "groups": [],
+    "wholeTenant": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "hits": [
+    {
+      "documentId": "0b9f1c2e-6d43-4b7a-9a51-2f0f3c1d8e77",
+      "title": "Expense policy",
+      "headingPath": [],
+      "page": null,
+      "text": "Per diem is 75 USD.",
+      "score": 0.91,
+      "rank": 1
+    }
+  ],
+  "timings": {}
+}

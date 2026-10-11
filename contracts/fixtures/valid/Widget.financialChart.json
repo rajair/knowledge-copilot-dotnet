@@ -1,0 +1,23 @@
+{
+  "type": "financialChart",
+  "title": "Revenue",
+  "unit": "USD millions",
+  "series": [
+    {
+      "label": "Revenue",
+      "points": [
+        {
+          "period": "FY2023",
+          "value": 1234.5
+        },
+        {
+          "period": "FY2024",
+          "value": 1382.75
+        }
+      ]
+    }
+  ],
+  "sourceChunkIds": [
+    "c-2"
+  ]
+}

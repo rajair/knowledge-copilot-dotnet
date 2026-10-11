@@ -1,0 +1,9 @@
+{
+  "title": null,
+  "contentType": "text/markdown",
+  "acl": {
+    "users": [],
+    "groups": [],
+    "wholeTenant": true
+  }
+}

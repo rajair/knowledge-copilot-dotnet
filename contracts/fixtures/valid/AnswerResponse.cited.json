@@ -1,0 +1,29 @@
+{
+  "answer": "The per diem is 75 USD [c-1].",
+  "contexts": [
+    {
+      "chunkId": "c-1",
+      "documentId": "0b9f1c2e-6d43-4b7a-9a51-2f0f3c1d8e77",
+      "title": "Expense policy",
+      "text": "Per diem is 75 USD.",
+      "score": 0.91,
+      "page": null
+    }
+  ],
+  "citations": [
+    {
+      "chunkId": "c-1",
+      "documentId": "0b9f1c2e-6d43-4b7a-9a51-2f0f3c1d8e77",
+      "title": "Expense policy",
+      "snippet": "Per diem is 75 USD.",
+      "page": null
+    }
+  ],
+  "usage": {
+    "inputTokens": 812,
+    "outputTokens": 34,
+    "costUsd": 0.000213,
+    "ttftMs": 420,
+    "retrievalMs": 95
+  }
+}

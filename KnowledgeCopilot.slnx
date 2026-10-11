@@ -11,5 +11,6 @@
   <Folder Name="/tests/">
     <Project Path="tests/KnowledgeCopilot.Api.Tests/KnowledgeCopilot.Api.Tests.csproj" />
     <Project Path="tests/KnowledgeCopilot.AppHost.Tests/KnowledgeCopilot.AppHost.Tests.csproj" />
+    <Project Path="tests/KnowledgeCopilot.Contracts.Tests/KnowledgeCopilot.Contracts.Tests.csproj" />
   </Folder>
 </Solution>

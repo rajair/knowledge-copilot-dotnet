@@ -1,0 +1,12 @@
+{
+  "title": "Expense policy",
+  "sourceUri": "https://handbook.example.com/finance/expenses",
+  "contentType": "text/markdown",
+  "acl": {
+    "users": [],
+    "groups": [
+      "finance"
+    ],
+    "wholeTenant": false
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "actionProposal",
+  "summary": "Delete everything.",
+  "arguments": {
+    "type": "deleteAllDocuments"
+  }
+}
