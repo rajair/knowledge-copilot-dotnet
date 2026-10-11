@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AnswerResponse",
+  "type": "object",
+  "properties": {
+    "answer": {
+      "type": "string",
+      "description": "Answer text (Markdown)."
+    },
+    "contexts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "chunkId": {
+            "type": "string",
+            "description": "Deterministic chunk id."
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Owning document."
+          },
+          "title": {
+            "type": "string",
+            "description": "Document title."
+          },
+          "text": {
+            "type": "string",
+            "description": "Chunk text as given to the model."
+          },
+          "score": {
+            "type": "number",
+            "description": "Final ranking score."
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "1-based page number, if the source is paged."
+          }
+        },
+        "required": [
+          "chunkId",
+          "documentId",
+          "title",
+          "text",
+          "score"
+        ],
+        "description": "A chunk that was given to the model as context."
+      },
+      "description": "Chunks given to the model, in prompt order."
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "chunkId": {
+            "type": "string",
+            "description": "Cited chunk id."
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Owning document."
+          },
+          "title": {
+            "type": "string",
+            "description": "Document title."
+          },
+          "snippet": {
+            "type": "string",
+            "description": "Short excerpt shown in the citation chip."
+          },
+          "page": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "1-based page number, if the source is paged."
+          }
+        },
+        "required": [
+          "chunkId",
+          "documentId",
+          "title",
+          "snippet"
+        ],
+        "description": "A source the answer cites. Always one of the retrieved chunks."
+      },
+      "description": "Validated citations; each refers to one of `contexts`."
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "inputTokens": {
+          "type": "integer",
+          "description": "Prompt tokens."
+        },
+        "outputTokens": {
+          "type": "integer",
+          "description": "Completion tokens."
+        },
+        "costUsd": {
+          "type": "number",
+          "description": "Estimated cost in US dollars (decimal in C#, a JSON number on the wire)."
+        },
+        "ttftMs": {
+          "type": "integer",
+          "description": "Time to first token, in milliseconds."
+        },
+        "retrievalMs": {
+          "type": "integer",
+          "description": "Retrieval time, in milliseconds."
+        }
+      },
+      "required": [
+        "inputTokens",
+        "outputTokens",
+        "costUsd",
+        "ttftMs",
+        "retrievalMs"
+      ],
+      "description": "Tokens, cost and latency."
+    }
+  },
+  "required": [
+    "answer",
+    "contexts",
+    "citations",
+    "usage"
+  ],
+  "description": "A complete answer with the evidence used to produce it."
+}

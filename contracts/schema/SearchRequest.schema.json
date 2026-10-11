@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SearchRequest",
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "Free-text query."
+    },
+    "topK": {
+      "type": "integer",
+      "default": 8,
+      "description": "Number of hits to return."
+    },
+    "mode": {
+      "enum": [
+        "hybrid",
+        "dense",
+        "sparse"
+      ],
+      "default": "hybrid",
+      "description": "Retrieval path."
+    }
+  },
+  "required": [
+    "query"
+  ],
+  "description": "Debug retrieval request (dev tools and evals)."
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DocumentUploadMetadata",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Display title used in citations."
+    },
+    "sourceUri": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Where the document came from (URL or path), if known."
+    },
+    "contentType": {
+      "type": "string",
+      "description": "MIME type of the uploaded file, for example `text/markdown` or `application/pdf`."
+    },
+    "acl": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "User ids that may read the document."
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Group ids whose members may read the document."
+        },
+        "wholeTenant": {
+          "type": "boolean",
+          "description": "When true, every user in the caller's tenant may read the document."
+        }
+      },
+      "required": [
+        "users",
+        "groups",
+        "wholeTenant"
+      ],
+      "description": "Initial access control list."
+    }
+  },
+  "required": [
+    "title",
+    "contentType",
+    "acl"
+  ],
+  "description": "Metadata sent with a document upload, as the `metadata` part of the multipart request."
+}
