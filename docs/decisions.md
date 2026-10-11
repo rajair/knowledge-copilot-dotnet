@@ -308,3 +308,65 @@ structure (decision, alternatives, trade-off).
   `next.config.ts` sets `agentRules: false`, because `next dev` otherwise writes `web/AGENTS.md`
   and `web/CLAUDE.md` whenever it detects an AI agent; agent rules for this repo live in
   `.github/copilot-instructions.md`.
+
+### D-1-01: zod from OpenAPI via `@hey-api/openapi-ts`
+
+- **Decision:** `web/scripts/gen-contracts.mjs` generates `zod.ts` with the hey-api zod plugin and
+  `api.d.ts` with `openapi-typescript`, both from `contracts/schema/openapi.json`. The OpenAPI
+  document carries an explicit discriminator mapping, which becomes
+  `z.discriminatedUnion("type", ...)`. Tool versions are pinned exactly in `devDependencies`.
+- **Alternatives:** `json-schema-to-zod` from the JSON Schema files (archived in June 2026; the
+  exported schemas have no discriminator keyword, so it would produce a plain union).
+- **Trade-off:** hey-api also emits operation-level schemas (for example `zSearchResponse2`);
+  only the component schemas are part of our contract.
+
+### D-1-02: Pydantic from OpenAPI via `datamodel-code-generator`
+
+- **Decision:** Settings live in `evals/pyproject.toml` under `[tool.datamodel-codegen]`;
+  `evals/scripts/gen_contracts.py` runs it and normalises the output to LF (the generator writes
+  CRLF on Windows). Widgets and action arguments become `Field(discriminator="type")` unions.
+  Tests validate in strict JSON mode so quoted numbers fail, as on the server.
+- **Alternatives:** Generate from the JSON Schema files (no discriminator, plain unions).
+
+### D-1-03: Strict numbers, camelCase enums, required constructor parameters
+
+- **Decision:** `ContractsJsonContext` uses `NumberHandling=Strict`, `RespectNullableAnnotations`
+  and `RespectRequiredConstructorParameters`, and every enum is a camelCase string. The Api
+  applies the same settings through `ContractsJson.Apply`, so the wire format, the OpenAPI
+  document and the generated clients agree.
+- **Trade-off:** System.Text.Json still reads enum names case-insensitively; the generated zod
+  and Pydantic models are case-sensitive.
+
+### D-1-04: OpenAPI build-time generation with transformers
+
+- **Decision:** `Microsoft.Extensions.ApiDescription.Server` writes `openapi.json` on every Api
+  build. Three fixes make it usable by the generators: a non-routable API-description carrier
+  registers schemas that no endpoint returns yet (Widget, DocumentUploadMetadata) as components;
+  a document transformer marks each discriminator property required and each variant
+  `type: object`; descriptions use `\n`. During generation the composition root sets a fixed
+  `Free` profile, because the generator starts the host and `ValidateOnStart` would fail.
+- **Alternatives:** Swashbuckle/NSwag (ruled out by the instructions); `GetOrCreateSchemaAsync`
+  in a document transformer (inlined derived types and broke the mapping).
+
+### D-1-05: Multipart upload with a JSON metadata part; antiforgery disabled
+
+- **Decision:** `POST /api/v1/documents` takes `file` plus a `metadata` part typed as
+  `DocumentUploadMetadata` (`application/json` encoding in OpenAPI). Antiforgery is disabled on
+  the endpoint because the Api only accepts bearer tokens from the BFF (D-16).
+
+### D-1-06: Per-contract JSON Schema files kept alongside OpenAPI
+
+- **Decision:** `tools/KnowledgeCopilot.SchemaExport` writes `contracts/schema/*.schema.json`
+  with `JsonSchemaExporter` (2020-12, descriptions from XML docs). They are the reference for
+  Step 5 tool schemas. Polymorphism appears as `anyOf` + `const`, not `oneOf`.
+
+### D-1-07: TypeScript stays on 5.x
+
+- **Decision:** `openapi-typescript` needs the TypeScript compiler API, which TypeScript 7 does
+  not ship. `web` keeps `typescript` on `^5`.
+
+### D-1-08: `ActionProposalWidget` has no separate `ActionType` property
+
+- **Decision:** The `type` discriminator of `arguments` is the action type, so a second
+  `actionType` field could disagree with it. The `ActionType` enum stays for server-side code.
+  This deviates from the step page's property list (user decision during planning).

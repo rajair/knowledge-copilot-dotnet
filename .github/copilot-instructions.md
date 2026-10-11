@@ -42,6 +42,11 @@ If a request conflicts with these, stop and ask. Don't pick one quietly.
   Never branch on the profile anywhere else.
 - Contracts are C# records in `KnowledgeCopilot.Contracts`. TS and Python
   types are generated (`make contracts`); never hand-edit generated files.
+  After changing a record, run `make contracts` and commit the output
+  (`contracts/schema/`, `web/src/contracts/*.ts`,
+  `evals/src/knowledge_evals/contracts/models.py`); the CI `contracts` job fails
+  on any diff. Serialize contracts with `ContractsJson` / `ContractsJsonContext`,
+  and add a valid and an invalid fixture in `contracts/fixtures/` for each new type.
 
 ## C# conventions
 
