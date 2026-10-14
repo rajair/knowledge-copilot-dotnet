@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AnswerRequest",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "description": "The user's question."
+    },
+    "conversationId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid",
+      "description": "Continue an existing conversation, if set."
+    }
+  },
+  "required": [
+    "question"
+  ],
+  "description": "Non-streaming question (evals and integrations)."
+}

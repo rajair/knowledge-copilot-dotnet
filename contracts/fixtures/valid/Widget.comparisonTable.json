@@ -1,0 +1,28 @@
+{
+  "type": "comparisonTable",
+  "title": "Plans",
+  "columns": [
+    "Price",
+    "Seats"
+  ],
+  "rows": [
+    {
+      "label": "Basic",
+      "cells": [
+        "10 USD",
+        "5"
+      ]
+    },
+    {
+      "label": "Pro",
+      "cells": [
+        "25 USD",
+        "20"
+      ]
+    }
+  ],
+  "sourceChunkIds": [
+    "c-3",
+    "c-4"
+  ]
+}

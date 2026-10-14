@@ -1,0 +1,12 @@
+{
+  "type": "actionProposal",
+  "summary": "Draft an email to finance.",
+  "arguments": {
+    "type": "draftEmail",
+    "to": [
+      "finance@example.com"
+    ],
+    "subject": "Per diem question",
+    "body": "Hi, is the per diem 75 USD?"
+  }
+}

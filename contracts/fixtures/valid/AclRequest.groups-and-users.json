@@ -1,0 +1,10 @@
+{
+  "users": [
+    "alice"
+  ],
+  "groups": [
+    "finance",
+    "legal"
+  ],
+  "wholeTenant": false
+}

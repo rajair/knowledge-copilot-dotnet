@@ -5,3 +5,8 @@
 *.png binary
 *.jpg binary
 *.ico binary
+
+# Generated contracts (Step 1): LF so the drift check is stable on Windows; collapsed in diffs.
+contracts/schema/** text eol=lf linguist-generated=true
+web/src/contracts/*.ts text eol=lf linguist-generated=true
+evals/src/knowledge_evals/contracts/models.py text eol=lf linguist-generated=true

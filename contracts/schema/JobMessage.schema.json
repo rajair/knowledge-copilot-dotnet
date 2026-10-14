@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JobMessage",
+  "type": "object",
+  "properties": {
+    "jobId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Ingestion job id (idempotency key)."
+    },
+    "kind": {
+      "enum": [
+        "index",
+        "updateAcl",
+        "delete"
+      ],
+      "description": "What to do."
+    },
+    "documentId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Target document."
+    },
+    "tenantId": {
+      "type": "string",
+      "description": "Tenant that owns the document."
+    },
+    "traceParent": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "W3C `traceparent` of the request that created the job, if any."
+    }
+  },
+  "required": [
+    "jobId",
+    "kind",
+    "documentId",
+    "tenantId"
+  ],
+  "description": "Queue message from the api to the worker. Carries ids only, never content or ACLs: the worker\nreads current state from the database, so a stale message cannot apply stale data."
+}

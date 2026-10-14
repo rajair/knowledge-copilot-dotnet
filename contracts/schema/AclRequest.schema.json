@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AclRequest",
+  "type": "object",
+  "properties": {
+    "users": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User ids that may read the document."
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Group ids whose members may read the document."
+    },
+    "wholeTenant": {
+      "type": "boolean",
+      "description": "When true, every user in the caller's tenant may read the document."
+    }
+  },
+  "required": [
+    "users",
+    "groups",
+    "wholeTenant"
+  ],
+  "description": "Who may read a document. Principals are opaque ids; the server adds the tenant (D-14)."
+}

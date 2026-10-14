@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Widget",
+  "type": "object",
+  "required": [
+    "type"
+  ],
+  "anyOf": [
+    {
+      "properties": {
+        "type": {
+          "const": "financialChart"
+        },
+        "title": {
+          "type": "string",
+          "description": "Chart title."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of every value, for example `USD millions`."
+        },
+        "series": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Series label, for example `Revenue`."
+              },
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "period": {
+                      "type": "string",
+                      "description": "Period label, for example `FY2024` or `2024-Q3`."
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "Value in the chart's unit."
+                    }
+                  },
+                  "required": [
+                    "period",
+                    "value"
+                  ],
+                  "description": "One value for one period."
+                },
+                "description": "Points in period order."
+              }
+            },
+            "required": [
+              "label",
+              "points"
+            ],
+            "description": "A named series of points."
+          },
+          "description": "One or more series sharing the same periods."
+        },
+        "sourceChunkIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Retrieved chunks the values come from."
+        }
+      },
+      "required": [
+        "title",
+        "unit",
+        "series",
+        "sourceChunkIds"
+      ],
+      "description": "A chart of financial values. Values are `decimal` in C# and plain JSON numbers on the wire;\nJavaScript and Python read them as binary floats, so use them for display only and keep any money\narithmetic on the server."
+    },
+    {
+      "properties": {
+        "type": {
+          "const": "comparisonTable"
+        },
+        "title": {
+          "type": "string",
+          "description": "Table title."
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Column headers (excluding the row label column)."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Row label."
+              },
+              "cells": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Cell texts, in column order."
+              }
+            },
+            "required": [
+              "label",
+              "cells"
+            ],
+            "description": "One labelled row of a comparison table."
+          },
+          "description": "Rows; each has one cell per column."
+        },
+        "sourceChunkIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Retrieved chunks the cells come from."
+        }
+      },
+      "required": [
+        "title",
+        "columns",
+        "rows",
+        "sourceChunkIds"
+      ],
+      "description": "A table comparing items across the same columns."
+    },
+    {
+      "properties": {
+        "type": {
+          "const": "actionProposal"
+        },
+        "summary": {
+          "type": "string",
+          "description": "One-sentence description shown on the approval card."
+        },
+        "arguments": {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "anyOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "createFollowUpTask"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Task title."
+                },
+                "dueDate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date",
+                  "description": "Due date, if any."
+                },
+                "assignee": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "User id of the assignee; the caller when omitted."
+                }
+              },
+              "required": [
+                "title"
+              ],
+              "description": "Arguments for ActionType.CreateFollowUpTask."
+            },
+            {
+              "properties": {
+                "type": {
+                  "const": "draftEmail"
+                },
+                "to": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Recipient addresses."
+                },
+                "subject": {
+                  "type": "string",
+                  "description": "Subject line."
+                },
+                "body": {
+                  "type": "string",
+                  "description": "Plain-text body."
+                }
+              },
+              "required": [
+                "to",
+                "subject",
+                "body"
+              ],
+              "description": "Arguments for ActionType.DraftEmail."
+            }
+          ],
+          "description": "Typed arguments; their `type` names the action."
+        }
+      },
+      "required": [
+        "summary",
+        "arguments"
+      ],
+      "description": "An action the model proposes. It never runs without a server-verified approval (D-15).\nThe action type is the discriminator of `arguments`."
+    }
+  ],
+  "description": "A structured UI element the model produces through a tool call. The `type` property is the\ndiscriminator and is always present on the wire."
+}

@@ -1,0 +1,32 @@
+{
+  "hits": [
+    {
+      "chunkId": "c-1",
+      "documentId": "0b9f1c2e-6d43-4b7a-9a51-2f0f3c1d8e77",
+      "title": "Expense policy",
+      "headingPath": [
+        "Finance",
+        "Travel"
+      ],
+      "page": null,
+      "text": "Per diem is 75 USD.",
+      "score": 0.91,
+      "rank": 1
+    },
+    {
+      "chunkId": "c-2",
+      "documentId": "6a1e8d0f-3c2b-4f5e-8a7d-9b0c1d2e3f40",
+      "title": "FY2024 10-K",
+      "headingPath": [],
+      "page": 42,
+      "text": "Revenue grew 12%.",
+      "score": 0.5,
+      "rank": 2
+    }
+  ],
+  "timings": {
+    "dense": 12.5,
+    "sparse": 3,
+    "rerank": 40.25
+  }
+}

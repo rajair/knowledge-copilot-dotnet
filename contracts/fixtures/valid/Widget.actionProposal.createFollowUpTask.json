@@ -1,0 +1,10 @@
+{
+  "type": "actionProposal",
+  "summary": "Create a task to review the travel policy.",
+  "arguments": {
+    "type": "createFollowUpTask",
+    "title": "Review travel policy",
+    "dueDate": "2026-11-01",
+    "assignee": null
+  }
+}

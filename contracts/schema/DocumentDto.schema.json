@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DocumentDto",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Document id."
+    },
+    "title": {
+      "type": "string",
+      "description": "Display title."
+    },
+    "sourceUri": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Where the document came from, if known."
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "processing",
+        "indexed",
+        "failed",
+        "deleting",
+        "deleted"
+      ],
+      "description": "Lifecycle state."
+    },
+    "version": {
+      "type": "integer",
+      "description": "Content version; increases when the content changes."
+    },
+    "aclVersion": {
+      "type": "integer",
+      "description": "ACL version; increases when the ACL changes (D-14)."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last change, with offset."
+    },
+    "lastError": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Error from the last failed job, if any."
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "status",
+    "version",
+    "aclVersion",
+    "updatedAt"
+  ],
+  "description": "A document as returned by the API."
+}

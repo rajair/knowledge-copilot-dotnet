@@ -3,17 +3,19 @@
 
 SOLUTION := KnowledgeCopilot.slnx
 APPHOST  := src/KnowledgeCopilot.AppHost/KnowledgeCopilot.AppHost.csproj
+API      := src/KnowledgeCopilot.Api/KnowledgeCopilot.Api.csproj
+SCHEMA_EXPORT := tools/KnowledgeCopilot.SchemaExport/KnowledgeCopilot.SchemaExport.csproj
 
 .DEFAULT_GOAL := help
 
-.PHONY: help setup build lint test dev clean \
+.PHONY: help setup build lint test dev contracts clean \
 	setup-dotnet setup-web setup-evals \
 	build-dotnet build-web \
 	lint-dotnet lint-web lint-evals \
 	test-dotnet test-web test-evals
 
 help:
-	$(info Targets: setup build lint test dev clean)
+	$(info Targets: setup build lint test dev contracts clean)
 	$(info Per part: setup-, build-, lint-, test- with suffix -dotnet, -web or -evals (no build-evals))
 
 setup: setup-dotnet setup-web setup-evals
@@ -57,6 +59,14 @@ test-web:
 
 test-evals:
 	uv run --project evals --locked pytest evals
+
+# Regenerates every contract artefact from the C# records (D-07). Building the Api writes
+# contracts/schema/openapi.json; TS, zod and Pydantic are generated from it. CI fails on any diff.
+contracts:
+	dotnet build $(API)
+	dotnet run --project $(SCHEMA_EXPORT) -- contracts/schema
+	pnpm -C web contracts
+	uv run --project evals --locked python evals/scripts/gen_contracts.py
 
 # Prefer the Aspire CLI; fall back to running the AppHost directly when the CLI is not installed.
 dev:

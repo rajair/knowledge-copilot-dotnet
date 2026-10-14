@@ -3,7 +3,9 @@ name = "knowledge-evals"
 version = "0.1.0"
 description = "RAGAS evaluation harness for Knowledge Copilot (built in Step 6)."
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "pydantic>=2.14.0",
+]
 
 [build-system]
 requires = ["uv_build>=0.11.17,<0.12.0"]
@@ -13,6 +15,27 @@ build-backend = "uv_build"
 testpaths = ["tests"]
 addopts = ["--strict-markers", "--strict-config"]
 
+# Pydantic models generated from the OpenAPI document (D-1-02). Run `make contracts`; paths are
+# relative to evals/.
+[tool.datamodel-codegen]
+input = "../contracts/schema/openapi.json"
+input-file-type = "openapi"
+output = "src/knowledge_evals/contracts/models.py"
+output-model-type = "pydantic_v2.BaseModel"
+target-python-version = "3.12"
+use-annotated = true
+field-constraints = true
+use-standard-collections = true
+use-union-operator = true
+enum-field-as-literal = "all"
+use-double-quotes = true
+use-schema-description = true
+use-field-description = true
+disable-timestamp = true
+custom-file-header = """# GENERATED - DO NOT EDIT. Run `make contracts`.
+# Source: contracts/schema/openapi.json"""
+formatters = ["ruff-check", "ruff-format"]
+
 [tool.ruff]
 target-version = "py312"
 line-length = 100
@@ -20,8 +43,13 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
 
+[tool.ruff.lint.per-file-ignores]
+# Generated; docstrings carry C# XML-doc text that the formatter cannot wrap.
+"src/knowledge_evals/contracts/models.py" = ["E501"]
+
 [dependency-groups]
 dev = [
+    "datamodel-code-generator==0.83.0",
     "pytest>=9.1.1",
     "ruff>=0.16.10",
 ]
