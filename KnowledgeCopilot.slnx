@@ -1,5 +1,8 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/KnowledgeCopilot.Adapters.Azure/KnowledgeCopilot.Adapters.Azure.csproj" />
+    <Project Path="src/KnowledgeCopilot.Adapters.Fakes/KnowledgeCopilot.Adapters.Fakes.csproj" />
+    <Project Path="src/KnowledgeCopilot.Adapters.Free/KnowledgeCopilot.Adapters.Free.csproj" />
     <Project Path="src/KnowledgeCopilot.Api/KnowledgeCopilot.Api.csproj" />
     <Project Path="src/KnowledgeCopilot.AppHost/KnowledgeCopilot.AppHost.csproj" />
     <Project Path="src/KnowledgeCopilot.Application/KnowledgeCopilot.Application.csproj" />
@@ -9,9 +12,12 @@
     <Project Path="src/KnowledgeCopilot.Worker/KnowledgeCopilot.Worker.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/KnowledgeCopilot.Adapters.ContractTests/KnowledgeCopilot.Adapters.ContractTests.csproj" />
     <Project Path="tests/KnowledgeCopilot.Api.Tests/KnowledgeCopilot.Api.Tests.csproj" />
     <Project Path="tests/KnowledgeCopilot.AppHost.Tests/KnowledgeCopilot.AppHost.Tests.csproj" />
+    <Project Path="tests/KnowledgeCopilot.Architecture.Tests/KnowledgeCopilot.Architecture.Tests.csproj" />
     <Project Path="tests/KnowledgeCopilot.Contracts.Tests/KnowledgeCopilot.Contracts.Tests.csproj" />
+    <Project Path="tests/KnowledgeCopilot.Domain.Tests/KnowledgeCopilot.Domain.Tests.csproj" />
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/KnowledgeCopilot.SchemaExport/KnowledgeCopilot.SchemaExport.csproj" />

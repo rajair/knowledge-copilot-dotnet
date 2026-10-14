@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NetArchTest.eNhancedEdition" />
+    <PackageReference Include="xunit.v3.mtp-v2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\KnowledgeCopilot.Domain\KnowledgeCopilot.Domain.csproj" />
+    <ProjectReference Include="..\..\src\KnowledgeCopilot.Application\KnowledgeCopilot.Application.csproj" />
+    <ProjectReference Include="..\..\src\KnowledgeCopilot.Adapters.Fakes\KnowledgeCopilot.Adapters.Fakes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

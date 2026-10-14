@@ -21,4 +21,10 @@ public sealed class KnowledgeCopilotOptions
     [Required]
     [EnumDataType(typeof(KnowledgeCopilotProfile))]
     public KnowledgeCopilotProfile? Profile { get; set; }
+
+    /// <summary>
+    /// Compose the in-memory fakes instead of the profile's adapters. Development only (D-2-01): the hosts
+    /// refuse to start with it in any other environment.
+    /// </summary>
+    public bool UseFakes { get; set; }
 }

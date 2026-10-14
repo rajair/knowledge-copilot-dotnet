@@ -12,18 +12,25 @@ complete design; this is the guided explanation of how its pieces fit and why.
 
 ## Where the project is now
 
-The repository is at the boundary between the first two roadmap steps:
+The repository has completed the first three roadmap steps; Step 3 is next:
 
 | Step | Status | What exists or is being added |
 | --- | --- | --- |
 | [0 — Scaffold and quality gates](steps/step-00-scaffold.md) | Implemented | .NET solution, Aspire AppHost, ASP.NET Core API host, .NET Worker host, shared ServiceDefaults, minimal Next.js app, Python evals skeleton, CI, tests, and Makefile. |
-| [1 — Contracts and codegen](steps/step-01-contracts.md) | Planned next | C# contract records become the source for OpenAPI/JSON Schema, generated TypeScript and zod schemas, and generated Python/Pydantic models. |
+| [1 — Contracts and codegen](steps/step-01-contracts.md) | Implemented | C# contract records are the source for OpenAPI/JSON Schema, generated TypeScript and zod schemas, and generated Python/Pydantic models. |
+| [2 — Ports, fakes and profile wiring](steps/step-02-ports-and-fakes.md) | Implemented | Domain ports and `AclFilter`, in-memory fake adapters, abstract adapter contract suites, architecture tests, and the Free/Azure/fakes switch in the API and Worker composition roots. |
+| [3 — Ingestion pipeline](steps/step-03-ingestion.md) | Planned next | Free adapters (Qdrant, local blob/queue, parser) and the upload → parse → chunk → embed → index pipeline with ACLs. |
 
-The running Step 0 code is deliberately a skeleton: the API and worker expose
-health/liveness endpoints and the worker runs a heartbeat service. The
-Contracts, Domain, and Application projects exist but are not yet feature
-implementations. Document ingestion, retrieval, authentication, model calls,
-and the metadata database are later steps.
+The running code is still a skeleton: the API serves stub endpoints and
+health/liveness checks, and the worker runs a heartbeat service. Step 2 adds
+the ports every later feature depends on (`IIndexStore`, `IReranker`,
+`IBlobStore`, `IWorkQueue`, `IDocumentParser`, `ICurrentPrincipal`, plus
+Microsoft.Extensions.AI's `IChatClient` and `IEmbeddingGenerator`) and
+in-memory fakes for all of them. The Free and Azure adapter projects exist but
+throw at startup until Steps 3–4 fill them in, so for now the AppHost runs the
+API and worker on the fakes (`KnowledgeCopilot:UseFakes=true`, Development
+only). Document ingestion, retrieval, authentication, model calls, and the
+metadata database are later steps.
 
 ## Architecture at a glance
 
@@ -153,7 +160,7 @@ These are complementary layers, not competing ways to build the app:
 | .NET Worker Service | Runs long-lived background processing without an HTTP request per job. | `KnowledgeCopilot.Worker` is a separate .NET host for queue-driven ingestion. It currently has a heartbeat, not the future ingestion pipeline. |
 | Aspire AppHost | Describes the local distributed application in C#: which projects/resources run, how they are named, configured, referenced, and made ready. It also supplies local service discovery and developer observability through the dashboard. | `KnowledgeCopilot.AppHost` launches the API, worker, and Next.js app. It configures the local `Free` profile and wires the web app to the API. |
 | Aspire ServiceDefaults | Adds common service-level capabilities to each .NET host. | API and worker share health checks, OpenTelemetry instrumentation/export, service discovery, standard HTTP resilience, logging, and validated profile options. |
-| Containers | Package an application and its runtime/dependencies into an image that can be run consistently by a container runtime or platform. | The current Step 0 app projects are started by Aspire for development; Dockerfiles and Docker Compose are explicitly deferred to Step 10. Azure Container Apps is deferred to Step 11. |
+| Containers | Package an application and its runtime/dependencies into an image that can be run consistently by a container runtime or platform. | The current app projects are started by Aspire for development; Dockerfiles and Docker Compose are explicitly deferred to Step 10. Azure Container Apps is deferred to Step 11. |
 
 At development time, the AppHost is the **orchestrator**; ASP.NET Core and the
 Worker Service are the **application processes**. Aspire does not replace
@@ -223,7 +230,7 @@ later implementation steps.
   generated artifacts, decision records, and evaluation gates make the
   architecture verifiable as it grows.
 
-## The first two steps in context
+## The first three steps in context
 
 ### Step 0 — establish a dependable runtime
 
@@ -239,16 +246,33 @@ workflow.
 
 ### Step 1 — define boundary payloads once
 
-Step 1 will add the payload records to `KnowledgeCopilot.Contracts`, then
+Step 1 added the payload records to `KnowledgeCopilot.Contracts`, which
 generate OpenAPI 3.1 and JSON Schema, TypeScript types and zod validators, and
-Python/Pydantic models. Shared fixtures and tests will verify that valid
-payloads round-trip and invalid ones are rejected. CI will regenerate the
-artifacts and fail on a diff.
+Python/Pydantic models. Shared fixtures and tests verify that valid payloads
+round-trip and invalid ones are rejected. CI regenerates the artifacts and
+fails on a diff.
 
 This makes the public API and the future web/evaluation clients agree on
 required fields, nullability, and widget variants before endpoints gain
 behavior. It deliberately does not add persistence, domain behavior,
 authentication, or working endpoints; those are later steps.
+
+### Step 2 — ports first, adapters later
+
+Step 2 defines the Domain ports and the `AclFilter` that every index query
+must carry, then implements each port as an in-memory fake in
+`KnowledgeCopilot.Adapters.Fakes`. Each port has an abstract contract test
+suite in `KnowledgeCopilot.Adapters.ContractTests`; the fakes pass it now and
+every real adapter added later must pass the same suite. Architecture tests
+fail the build if Domain or Application reference a vendor SDK or an outer
+layer.
+
+The API and Worker composition roots read `KnowledgeCopilot:Profile` and
+`KnowledgeCopilot:UseFakes` and are the only places that do. Fakes and the
+fixed Development principal throw outside the Development environment, so a
+misconfigured production host fails at startup instead of serving fake data.
+The decisions are recorded as D-2-01 to D-2-05 in
+[decisions.md](decisions.md).
 
 For the complete design and decision rationale, see
 [architecture.md](architecture.md), [decisions.md](decisions.md), and the

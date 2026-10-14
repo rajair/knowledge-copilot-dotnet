@@ -40,6 +40,9 @@ If a request conflicts with these, stop and ask. Don't pick one quietly.
 - The profile (`KnowledgeCopilot:Profile` = `Free` | `Azure`) is read **only**
   in the composition roots (`Api/Program.cs`, `Worker/Program.cs`, AppHost).
   Never branch on the profile anywhere else.
+- `KnowledgeCopilot:UseFakes` swaps in the in-memory adapters from
+  `Adapters.Fakes`; it and the Dev principal are Development-only and throw at
+  startup elsewhere (D-2-01). New ports get a fake there plus a contract suite.
 - Contracts are C# records in `KnowledgeCopilot.Contracts`. TS and Python
   types are generated (`make contracts`); never hand-edit generated files.
   After changing a record, run `make contracts` and commit the output

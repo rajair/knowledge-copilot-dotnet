@@ -31,7 +31,7 @@ The profile is a configuration switch; application code depends only on ports
 | | |
 | --- | --- |
 | [docs/README.md](docs/README.md) | Index and reading order |
-| [docs/project-overview.md](docs/project-overview.md) | Guided architecture overview, current Steps 0–1, and how ASP.NET Core, Aspire, and containers work together |
+| [docs/project-overview.md](docs/project-overview.md) | Guided architecture overview, current Steps 0–2, and how ASP.NET Core, Aspire, and containers work together |
 | [docs/architecture.md](docs/architecture.md) | Full architecture with C4 views, data model and sequence diagrams |
 | [docs/decisions.md](docs/decisions.md) | Architecture decision records |
 | [docs/prompt-engineering.md](docs/prompt-engineering.md) | How to prompt coding agents: principles P1–P12, template, anti-patterns |
@@ -57,7 +57,18 @@ The profile is a configuration switch; application code depends only on ports
 
 ## Status
 
-Planning complete; implementation starts at Step 0.
+Steps 0–2 are implemented; Step 3 (ingestion) is next.
+
+| Step | Status | What exists |
+| ---- | ------ | ----------- |
+| 0 | Implemented | Solution, Aspire AppHost, API and Worker hosts, ServiceDefaults, web and evals skeletons, CI, Makefile |
+| 1 | Implemented | C# contract records as the source for OpenAPI/JSON Schema, generated TypeScript + zod and Python models, CI drift check |
+| 2 | Implemented | Domain ports (`IIndexStore`, `IReranker`, `IBlobStore`, `IWorkQueue`, `IDocumentParser`, `ICurrentPrincipal`) with `AclFilter`; in-memory fakes; abstract adapter contract suites; architecture tests that keep vendor SDKs out of Domain/Application; profile switch in the API and Worker composition roots |
+| 3–12 | Planned | See the roadmap above |
+
+Until Step 3 adds the Free adapters, the API and Worker only start with the
+in-memory fakes (`KnowledgeCopilot:UseFakes=true`), which is allowed only in
+the Development environment. `make dev` sets this automatically.
 
 ## Related
 

@@ -7,6 +7,9 @@
   <ItemGroup>
     <ProjectReference Include="..\KnowledgeCopilot.ServiceDefaults\KnowledgeCopilot.ServiceDefaults.csproj" />
     <ProjectReference Include="..\KnowledgeCopilot.Application\KnowledgeCopilot.Application.csproj" />
+    <ProjectReference Include="..\KnowledgeCopilot.Adapters.Fakes\KnowledgeCopilot.Adapters.Fakes.csproj" />
+    <ProjectReference Include="..\KnowledgeCopilot.Adapters.Free\KnowledgeCopilot.Adapters.Free.csproj" />
+    <ProjectReference Include="..\KnowledgeCopilot.Adapters.Azure\KnowledgeCopilot.Adapters.Azure.csproj" />
   </ItemGroup>
 
 </Project>
