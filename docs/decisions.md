@@ -370,3 +370,65 @@ structure (decision, alternatives, trade-off).
 - **Decision:** The `type` discriminator of `arguments` is the action type, so a second
   `actionType` field could disagree with it. The `ActionType` enum stays for server-side code.
   This deviates from the step page's property list (user decision during planning).
+
+### D-2-01: Fakes and the Development principal are Development-only, enforced at startup
+
+- **Decision:** `KnowledgeCopilot:UseFakes` (on `KnowledgeCopilotOptions`) makes the composition
+  roots call `AddFakeAdapters()` instead of the profile's adapters. `AddFakeAdapters()` and
+  `AddDevCurrentPrincipal()` take the `IHostApplicationBuilder` and throw
+  `InvalidOperationException` unless the environment is Development. The Dev principal (tenant
+  `dev`, user `dev-user`, configurable under `KnowledgeCopilot:DevPrincipal`) is registered with
+  `TryAdd`, so the real JWT principal from Step 8 replaces it.
+- **Alternatives:** A third `Profile` value `Fakes` (spreads a test concern into the profile enum
+  that Steps 10–11 deploy); register fakes from tests only (then `make dev` has nothing to run
+  until Step 3).
+- **Trade-off:** One extra flag. A Production host with `UseFakes=true` fails fast instead of
+  serving in-memory data.
+
+### D-2-02: Architecture tests use NetArchTest.eNhancedEdition plus two cheap checks
+
+- **Decision:** `KnowledgeCopilot.Architecture.Tests` uses NetArchTest.eNhancedEdition to forbid
+  vendor namespaces (`Azure`, `Qdrant`, `OllamaSharp`, `Npgsql`, EF Core, SqlClient) and outer
+  layers (Adapters, Persistence, Api, Worker, ServiceDefaults) in Domain and Application. Two
+  more tests check each assembly's referenced assemblies and each `.csproj`'s
+  `PackageReference`s, so a vendor package fails the build even before a type uses it. A
+  positive-control test proves the rule detects a known dependency (Fakes → Domain).
+- **Alternatives:** ArchUnitNET (heavier API for the same rules); reflection only (misses
+  method-body dependencies).
+- **Trade-off:** One more test dependency; the original NetArchTest is unmaintained, the
+  eNhancedEdition fork is.
+
+### D-2-03: Until Step 3 the hosts run only on fakes
+
+- **Decision:** `AddFreeAdapters()` and `AddAzureAdapters()` exist but throw with a message
+  naming the step that implements them. The AppHost sets `KnowledgeCopilot__UseFakes=true` on
+  the api and worker in run mode, so `make dev` works. Consequently the Api cannot start outside
+  Development: the OpenAPI "404 in Production" test is skipped until Step 3, and D-20 (health
+  in every environment) is tested on a minimal Production host built from ServiceDefaults.
+  Build-time OpenAPI generation is unaffected because it skips adapter registration.
+- **Alternatives:** Register fakes as the Free adapters for now (would hide a missing adapter in
+  production); keep Step 0's Production factory (cannot resolve the ports).
+- **Trade-off:** One skipped test and a temporary AppHost setting, both removed in Step 3.
+
+### D-2-04: `IWorkQueue` receipts follow Azure pop-receipt semantics
+
+- **Decision:** Each delivery gets a new `JobReceipt` and a higher `DequeueCount`. When the
+  visibility timeout expires and the job is received again, the old receipt is superseded and
+  `CompleteAsync`/`DeadLetterAsync` with it throw `JobReceiptExpiredException`. Repeating a call
+  with a receipt that already finished the job is a no-op. The worker decides when to dead-letter
+  (using `DequeueCount`); the queue does not do it automatically. The fake takes `TimeProvider`,
+  so contract tests use `FakeTimeProvider`.
+- **Alternatives:** Ack by job id (cannot detect a second consumer that took the job over).
+- **Trade-off:** Workers must handle the expired-receipt exception; Azure Storage Queues
+  (D-05) behave the same way.
+
+### D-2-05: `ICurrentPrincipal` derives everything from one `Principal`
+
+- **Decision:** Implementations supply only `Principal`; `TenantId`, `UserId`, `Groups` and
+  `ToAclPrincipals()` are default interface members, and `ToAclPrincipals()` comes from
+  `AclFilter.For`. Every implementation therefore produces the same `u:`/`g:`/`t:`
+  principal strings that the index filter matches. `IndexedChunk` carries the dense vector only;
+  adapters derive sparse terms from `Text` (D-08).
+- **Alternatives:** Each implementation builds its own principal list (easy to diverge from the
+  indexer's format).
+- **Trade-off:** Default interface members are less familiar; the contract suite covers them.

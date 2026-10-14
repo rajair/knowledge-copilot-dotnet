@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KnowledgeCopilot.Api.Tests;
 
-public sealed class StubEndpointTests(ProductionApiFactory factory) : IClassFixture<ProductionApiFactory>
+public sealed class StubEndpointTests(FakesApiFactory factory) : IClassFixture<FakesApiFactory>
 {
     [Fact]
     public async Task PostSearch_ValidRequest_Returns501ProblemDetails()
