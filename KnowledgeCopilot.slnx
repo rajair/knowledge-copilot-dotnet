@@ -16,4 +16,27 @@
   <Folder Name="/tools/">
     <Project Path="tools/KnowledgeCopilot.SchemaExport/KnowledgeCopilot.SchemaExport.csproj" />
   </Folder>
+  <Folder Name="/docs/">
+    <File Path="docs/README.md" />
+    <File Path="docs/architecture.md" />
+    <File Path="docs/decisions.md" />
+    <File Path="docs/project-overview.md" />
+    <File Path="docs/prompt-engineering.md" />
+    <Folder Name="/docs/steps/">
+      <File Path="docs/steps/README.md" />
+      <File Path="docs/steps/step-00-scaffold.md" />
+      <File Path="docs/steps/step-01-contracts.md" />
+      <File Path="docs/steps/step-02-ports-and-fakes.md" />
+      <File Path="docs/steps/step-03-ingestion.md" />
+      <File Path="docs/steps/step-04-retrieval.md" />
+      <File Path="docs/steps/step-05-chat-api.md" />
+      <File Path="docs/steps/step-06-evals.md" />
+      <File Path="docs/steps/step-07-generative-ui.md" />
+      <File Path="docs/steps/step-08-auth.md" />
+      <File Path="docs/steps/step-09-observability.md" />
+      <File Path="docs/steps/step-10-free-packaging.md" />
+      <File Path="docs/steps/step-11-azure-deploy.md" />
+      <File Path="docs/steps/step-12-hardening.md" />
+    </Folder>
+  </Folder>
 </Solution>
