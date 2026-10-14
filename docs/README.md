@@ -5,6 +5,7 @@ coding agents: every step prompt tells the agent to read these files first.
 
 | Document | What it is | Read it when |
 | -------- | ---------- | ------------ |
+| [project-overview.md](project-overview.md) | Guided explanation of the current scaffold, target architecture, and how ASP.NET Core, Aspire, and containers fit together | To understand the whole project and current Steps 0–1 |
 | [architecture.md](architecture.md) | The system: goals, two profiles, C4 views, project structure, ports, data model, index and ACL model, nine sequence diagrams, API, security, observability, config, deployment, SLOs | Before any step; whenever a prompt says "architecture §n" |
 | [decisions.md](decisions.md) | Architecture decision records D-01…D-20, plus per-step decisions (D-&lt;step&gt;-nn) | When you wonder "why this and not that" |
 | [prompt-engineering.md](prompt-engineering.md) | How to prompt a coding agent: workflow, prompt anatomy, twelve principles (P1–P12), template, follow-ups, anti-patterns | Before Step 0, then whenever a "why this is a good prompt" row cites a principle |
